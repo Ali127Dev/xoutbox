@@ -31,8 +31,8 @@ func NewPublisher[T comparable](cfg Config) (*Publisher[T], error) {
 	config.Producer.Flush.Frequency = cfg.BatchTimeout
 
 	config.Producer.Retry.Max = 5
-	config.Producer.Return.Successes = true
-	config.Producer.Return.Errors = true
+	config.Producer.Return.Successes = false
+	config.Producer.Return.Errors = false
 
 	producer, err := sarama.NewAsyncProducer(cfg.Brokers, config)
 	if err != nil {
