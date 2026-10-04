@@ -1,0 +1,22 @@
+CREATE TABLE IF NOT EXISTS {t} (
+    seq           BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    id            VARCHAR(64)  NOT NULL,
+    topic         VARCHAR(255) NOT NULL,
+    partition_key VARCHAR(255) NOT NULL DEFAULT '',
+    event_type    VARCHAR(255) NOT NULL DEFAULT '',
+    payload       LONGBLOB     NOT NULL,
+    headers       JSON         NULL,
+    status        VARCHAR(16)  NOT NULL DEFAULT 'pending',
+    attempts      INT          NOT NULL DEFAULT 0,
+    max_attempts  INT          NOT NULL DEFAULT 10,
+    last_error    TEXT         NULL,
+    locked_by     VARCHAR(255) NULL,
+    locked_until  DATETIME(6)  NULL,
+    available_at  DATETIME(6)  NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+    created_at    DATETIME(6)  NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+    published_at  DATETIME(6)  NULL,
+    UNIQUE KEY {n}_id_uq (id),
+    KEY {n}_claim_idx (status, available_at, seq),
+    KEY {n}_key_idx (partition_key, seq),
+    KEY {n}_published_idx (status, published_at)
+) ENGINE = InnoDB
